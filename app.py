@@ -1285,9 +1285,10 @@ HTML = r"""<!doctype html>
   u.searchParams.set("cl_page", pageId);
   window.location.href = u.toString();
 }
-    /* --- CL_NAV_HARDENER_START ---
-       Convert onclick-based nav items into real links (<a href="?cl_page=...">)
-       so navigation works reliably across browsers/extensions and without inline handlers.
+        /* --- CL_NAV_HARDENER_START ---
+       Harden nav without changing DOM elements (preserve CSS).
+       - Removes inline onclick handlers
+       - Adds click + keyboard handlers to navigate via ?cl_page=...
     --- */
     document.addEventListener('DOMContentLoaded', () => {
       try {
@@ -1298,25 +1299,33 @@ HTML = r"""<!doctype html>
           if (!mm) continue;
 
           const pageId = mm[1];
-          const href = `?cl_page=${encodeURIComponent(pageId)}`;
 
-          // If it's already an <a>, just add href + remove onclick.
-          if (el.tagName && el.tagName.toLowerCase() === 'a') {
-            if (!el.getAttribute('href')) el.setAttribute('href', href);
-            el.removeAttribute('onclick');
-            continue;
-          }
+          // Remove inline JS
+          el.removeAttribute('onclick');
 
-          // Otherwise replace element with an <a> that preserves attributes/classes/content.
-          const a = document.createElement('a');
-          for (const attr of Array.from(el.attributes)) {
-            if (attr.name.toLowerCase() === 'onclick') continue;
-            a.setAttribute(attr.name, attr.value);
-          }
-          a.setAttribute('href', href);
-          a.innerHTML = el.innerHTML;
+          // Accessibility + discoverability
+          el.setAttribute('data-cl-page', pageId);
+          el.setAttribute('role', 'link');
+          if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
 
-          el.replaceWith(a);
+          const go = (ev) => {
+            const u = new URL(window.location.href);
+            u.searchParams.set('cl_page', pageId);
+
+            // ctrl/cmd-click opens new tab
+            if (ev && (ev.ctrlKey || ev.metaKey)) {
+              window.open(u.toString(), '_blank');
+            } else {
+              window.location.href = u.toString();
+            }
+
+            if (ev) { ev.preventDefault(); ev.stopPropagation(); }
+          };
+
+          el.addEventListener('click', go);
+          el.addEventListener('keydown', (ev) => {
+            if (ev.key === 'Enter' || ev.key === ' ') go(ev);
+          });
         }
       } catch (e) {
         console.warn('Nav hardener failed:', e);
