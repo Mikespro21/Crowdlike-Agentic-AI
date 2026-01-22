@@ -1285,34 +1285,73 @@ HTML = r"""<!doctype html>
   u.searchParams.set("cl_page", pageId);
   window.location.href = u.toString();
 }
-        /* --- CL_NAV_HARDENER_START ---
-       Harden nav without changing DOM elements (preserve CSS).
-       - Removes inline onclick handlers
-       - Adds click + keyboard handlers to navigate via ?cl_page=...
+            /* --- CL_NAV_HARDENER_START ---
+       Robust sidebar nav for all browsers:
+       1) If #nav is empty, inject a static fallback list of links (no dependency on other JS/libs).
+       2) Remove inline onclick routeToStreamlit(...) (less fragile across extensions).
+       3) Add click + keyboard handlers that navigate via ?cl_page=...
     --- */
     document.addEventListener('DOMContentLoaded', () => {
       try {
-        const nodes = Array.from(document.querySelectorAll('[onclick*="routeToStreamlit"]'));
-        for (const el of nodes) {
+        const nav = document.getElementById('nav');
+
+        // 1) Fallback nav injection if nothing rendered
+        if (nav && nav.children.length === 0) {
+          nav.innerHTML = `
+            <a href="?cl_page=dashboard" data-cl-page="dashboard"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Dashboard</span>
+            </a>
+            <a href="?cl_page=agents" data-cl-page="agents"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Agents</span>
+            </a>
+            <a href="?cl_page=market" data-cl-page="market"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Market</span>
+            </a>
+            <a href="?cl_page=analytics" data-cl-page="analytics"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Analytics</span>
+            </a>
+            <a href="?cl_page=leaderboards" data-cl-page="leaderboards"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Leaderboards</span>
+            </a>
+            <a href="?cl_page=chat" data-cl-page="chat"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Chat</span>
+            </a>
+            <a href="?cl_page=profile" data-cl-page="profile"
+               class="group flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-100 hover:text-gray-900 transition-colors">
+              <span class="truncate">Profile</span>
+            </a>
+          `;
+        }
+
+        // 2) Remove inline onclick routeToStreamlit(...) and add data-cl-page
+        const onclickNodes = Array.from(document.querySelectorAll('[onclick*="routeToStreamlit"]'));
+        for (const el of onclickNodes) {
           const onclick = el.getAttribute('onclick') || '';
           const mm = onclick.match(/routeToStreamlit\(\s*['"]([^'"]+)['"]\s*\)/);
           if (!mm) continue;
 
           const pageId = mm[1];
-
-          // Remove inline JS
           el.removeAttribute('onclick');
-
-          // Accessibility + discoverability
           el.setAttribute('data-cl-page', pageId);
           el.setAttribute('role', 'link');
           if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
+        }
+
+        // 3) Attach robust navigation handlers to anything with data-cl-page
+        const nodes = Array.from(document.querySelectorAll('[data-cl-page]'));
+        for (const el of nodes) {
+          const pageId = el.getAttribute('data-cl-page');
 
           const go = (ev) => {
             const u = new URL(window.location.href);
             u.searchParams.set('cl_page', pageId);
 
-            // ctrl/cmd-click opens new tab
             if (ev && (ev.ctrlKey || ev.metaKey)) {
               window.open(u.toString(), '_blank');
             } else {
@@ -1322,10 +1361,14 @@ HTML = r"""<!doctype html>
             if (ev) { ev.preventDefault(); ev.stopPropagation(); }
           };
 
-          el.addEventListener('click', go);
-          el.addEventListener('keydown', (ev) => {
-            if (ev.key === 'Enter' || ev.key === ' ') go(ev);
-          });
+          // Only bind if not already bound
+          if (!el.__clNavBound) {
+            el.__clNavBound = true;
+            el.addEventListener('click', go);
+            el.addEventListener('keydown', (ev) => {
+              if (ev.key === 'Enter' || ev.key === ' ') go(ev);
+            });
+          }
         }
       } catch (e) {
         console.warn('Nav hardener failed:', e);
