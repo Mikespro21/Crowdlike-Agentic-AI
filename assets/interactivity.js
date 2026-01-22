@@ -1,11 +1,3 @@
-cd /c/Users/mange/Downloads/ARC
-
-# sanity: must be a git repo
-test -d .git || { echo "NOT A GIT REPO: re-clone ARC first"; exit 1; }
-
-# overwrite the JS file
-mkdir -p assets
-cat > assets/interactivity.js <<'JS'
 /* CROWDLIKE_INTERACTIVITY_V2 */
 (function () {
   "use strict";
@@ -173,8 +165,3 @@ cat > assets/interactivity.js <<'JS'
     boot();
   }
 })();
-JS
-
-git add assets/interactivity.js
-git commit -m "Fix interactivity script crash (boot) + enable page nav & click feedback"
-git push
