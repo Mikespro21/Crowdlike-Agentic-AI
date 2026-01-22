@@ -6,6 +6,70 @@ CLARITY_PROJECT_ID = "v2ghymedzy"
 
 st.set_page_config(page_title="Crowdlike", layout="wide")
 
+
+
+# --- CL_PAGE_ROUTER_START ---
+# Route ARC-main HTML navigation (?cl_page=...) into Streamlit multipage.
+# Must execute BEFORE we render the big HTML UI.
+from pathlib import Path
+
+def _cl_get_param(key: str):
+    try:
+        # Streamlit modern API (returns last value for dict-like access)
+        return st.query_params.get(key)
+    except Exception:
+        # Back-compat
+        params = st.experimental_get_query_params()
+        vals = params.get(key, [])
+        return vals[-1] if vals else None
+
+cl_page = _cl_get_param("cl_page")
+if cl_page:
+    key = str(cl_page).strip().lower()
+
+    # Normalize common variants
+    aliases = {
+        "home": "dashboard",
+        "dash": "dashboard",
+        "leaderboard": "leaderboards",
+        "leaders": "leaderboards",
+    }
+    key = aliases.get(key, key)
+
+    # Explicit mapping for ARC-main nav labels
+    page_map = {
+        "dashboard": "pages/dashboard.py",
+        "agents": "pages/agents.py",
+        "market": "pages/market.py",
+        "analytics": "pages/analytics.py",
+        "leaderboards": "pages/social.py",   # ARC-main "Leaderboards" -> Social page
+        "chat": "pages/chat.py",
+        "profile": "pages/profile.py",
+        # Add more if your HTML nav includes them:
+        "safety": "pages/safety.py",
+        "quests": "pages/quests.py",
+        "shop": "pages/shop.py",
+        "journey": "pages/journey.py",
+        "coach": "pages/coach.py",
+        "compare": "pages/compare.py",
+        "pricing": "pages/pricing.py",
+        "admin": "pages/admin.py",
+    }
+
+    target = page_map.get(key)
+
+    # Fallback: if pages/<key>.py exists, route there automatically
+    if target is None:
+        candidate = Path("pages") / f"{key}.py"
+        if candidate.exists():
+            target = str(candidate)
+
+    if target:
+        # Clear query params on switch to avoid getting "stuck" redirecting on refresh
+        st.switch_page(target, query_params={})
+        st.stop()
+# --- CL_PAGE_ROUTER_END ---
+
 # --- ARC-main router: allow the custom sidebar to route into Streamlit pages ---
 def _get_query_param(name: str) -> str | None:
     try:
