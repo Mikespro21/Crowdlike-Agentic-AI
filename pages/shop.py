@@ -61,11 +61,11 @@ for i, it in enumerate(items):
         )
 
         if it["id"] in owned:
-            st.button("Owned", key=f"owned_{it['id']}", disabled=True, use_container_width=True)
+            st.button("Owned", key=f"owned_{it['id']}", disabled=True, width="stretch")
         else:
             can = coins >= it["cost"]
             button_style(f"buy_{it['id']}", "purple" if can else "white")
-            if st.button("Buy", key=f"buy_{it['id']}", disabled=not can, use_container_width=True, type="primary" if can else "secondary"):
+            if st.button("Buy", key=f"buy_{it['id']}", disabled=not can, width="stretch", type="primary" if can else "secondary"):
                 user["coins"] = int(user.get("coins", 0) or 0) - int(it["cost"])
                 user.setdefault("inventory", []).append(it["id"])
                 grant_xp(user, 10, "Shop", f"Bought {it['name']}")
@@ -97,7 +97,7 @@ with p1:
         unsafe_allow_html=True,
     )
     button_style("shop_buy_vip", "purple" if wallet_set else "white")
-    if st.button("Buy with USDC →", key="shop_buy_vip", use_container_width=True, type="primary", disabled=not wallet_set):
+    if st.button("Buy with USDC →", key="shop_buy_vip", width="stretch", type="primary", disabled=not wallet_set):
         st.session_state["checkout_offer_id"] = "vip_pass"
         st.session_state["checkout_step"] = 1
         st.switch_page("pages/market.py")
@@ -114,7 +114,7 @@ with p2:
         unsafe_allow_html=True,
     )
     button_style("shop_buy_tip", "blue" if wallet_set else "white")
-    if st.button("Tip with USDC →", key="shop_buy_tip", use_container_width=True, disabled=not wallet_set):
+    if st.button("Tip with USDC →", key="shop_buy_tip", width="stretch", disabled=not wallet_set):
         st.session_state["checkout_offer_id"] = "creator_tip"
         st.session_state["checkout_step"] = 1
         st.switch_page("pages/market.py")

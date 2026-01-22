@@ -69,7 +69,7 @@ with sc2:
 with sc3:
     st.markdown(f"**Today:** {win['daily']['return_pct']:+.2f}%")
 with sc4:
-    if st.button("Open Market", use_container_width=True):
+    if st.button("Open Market", width="stretch"):
         st.switch_page("pages/market.py")
 
 soft_divider()

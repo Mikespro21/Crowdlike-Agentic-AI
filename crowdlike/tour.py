@@ -229,11 +229,11 @@ def maybe_run_tour(user: Dict[str, Any] | None, current_page: str) -> None:
     _inject_step_css(s.target_key, k_skip, k_back, k_next)
 
     # Render the buttons (they get positioned by CSS into the popup)
-    if st.button("Next", key=k_next, disabled=(step >= TOTAL), use_container_width=True):
+    if st.button("Next", key=k_next, disabled=(step >= TOTAL), width="stretch"):
         _set_step(step + 1); st.rerun()
 
-    if st.button("Back", key=k_back, disabled=(step <= 1), use_container_width=True):
+    if st.button("Back", key=k_back, disabled=(step <= 1), width="stretch"):
         _set_step(step - 1); st.rerun()
 
-    if st.button("Skip", key=k_skip, use_container_width=True):
+    if st.button("Skip", key=k_skip, width="stretch"):
         _finish(user); st.rerun()

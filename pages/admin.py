@@ -51,6 +51,6 @@ def match(row: dict) -> bool:
 rows = [r for r in logs if isinstance(r, dict) and match(r)]
 st.caption(f"Showing {len(rows)} / {len(logs)} log entries")
 
-st.dataframe(rows, use_container_width=True, hide_index=True)
+st.dataframe(rows, width="stretch", hide_index=True)
 
 save_current_user()

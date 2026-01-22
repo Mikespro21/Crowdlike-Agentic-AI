@@ -1217,12 +1217,10 @@ HTML = r"""<!doctype html>
 
 
     function routeToStreamlit(pageId) {
-      try {
-        const u = new URL(window.parent.location.href);
-        u.pathname = "/";
-        u.searchParams.set("cl_page", pageId);
-        window.parent.location.href = u.toString();
-      } catch (e) {
+  const u = new URL(window.location.href);
+  u.searchParams.set("cl_page", pageId);
+  window.location.href = u.toString();
+} catch (e) {
         try { window.parent.location.search = "?cl_page=" + encodeURIComponent(pageId); } catch {}
       }
     }
@@ -1513,4 +1511,4 @@ HTML = r"""<!doctype html>
 </body>
 </html>"""
 
-components.html(HTML, height=950, scrolling=True)
+st.html(HTML, unsafe_allow_javascript=True, width="stretch")

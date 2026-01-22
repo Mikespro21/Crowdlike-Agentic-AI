@@ -142,7 +142,7 @@ st.markdown("### Run cycle")
 r1, r2, r3 = st.columns([1.2, 1.0, 1.0])
 
 with r1:
-    if st.button("Run agent cycle", type="primary", use_container_width=True):
+    if st.button("Run agent cycle", type="primary", width="stretch"):
         report = run_agent_cycle(user, active_agent, markets=rows if isinstance(rows, list) else None, reason="coach")
         prop = report.get("proposal") if isinstance(report.get("proposal"), dict) else {}
         title = str(prop.get("title") or "Action")
@@ -158,7 +158,7 @@ with r1:
         st.rerun()
 
 with r2:
-    if st.button("Generate proposal only", use_container_width=True):
+    if st.button("Generate proposal only", width="stretch"):
         p = propose_next_action(user, active_agent, markets=rows if isinstance(rows, list) else None)
         log_event(
             user,
@@ -229,7 +229,7 @@ def _render_approvals() -> None:
 
             cols = st.columns([1, 1])
             with cols[0]:
-                if st.button("Approve", key=f"appr_yes_{i}", type="primary", use_container_width=True):
+                if st.button("Approve", key=f"appr_yes_{i}", type="primary", width="stretch"):
                     applied = False
                     try:
                         if str(p.get("type")) == "copy":
@@ -265,7 +265,7 @@ def _render_approvals() -> None:
                     st.rerun()
 
             with cols[1]:
-                if st.button("Reject", key=f"appr_no_{i}", use_container_width=True):
+                if st.button("Reject", key=f"appr_no_{i}", width="stretch"):
                     try:
                         active_agent["approvals"].remove(p)
                     except Exception:

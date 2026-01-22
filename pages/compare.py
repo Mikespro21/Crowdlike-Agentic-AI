@@ -63,10 +63,10 @@ for tab, w in zip(tabs, windows):
         if role not in ("bot","admin"):
             st.dataframe(
                 [{ "Bot ID": r["bot_id"], "Score": round(r["score"],2), "Profit": r["profit"], "Streaks": r["streaks"] } for r in lb],
-                use_container_width=True,
+                width="stretch",
                 hide_index=True,
             )
         else:
-            st.dataframe(lb, use_container_width=True, hide_index=True)
+            st.dataframe(lb, width="stretch", hide_index=True)
 
 save_current_user()

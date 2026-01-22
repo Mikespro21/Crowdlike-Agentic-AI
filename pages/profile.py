@@ -73,7 +73,7 @@ with tabs[0]:
         user["bio"] = st.text_area("Bio (optional)", value=user.get("bio", ""), placeholder="What are you building?", key="pf_bio")
 
         button_style("pf_save_identity", "blue")
-        if st.button("Save identity", type="primary", key="pf_save_identity", use_container_width=True):
+        if st.button("Save identity", type="primary", key="pf_save_identity", width="stretch"):
             save_current_user()
             grant_xp(user, 30, "Profile", "Updated identity")
             add_notification(user, "Saved ✔️", "success")
@@ -97,7 +97,7 @@ with tabs[0]:
         )
         st.write("")
         button_style("pf_logout", "slate")
-        if st.button("Log out", key="pf_logout", use_container_width=True):
+        if st.button("Log out", key="pf_logout", width="stretch"):
             logout()
             st.rerun()
 
@@ -124,7 +124,7 @@ with tabs[1]:
     cols = st.columns([1, 1, 1])
     with cols[0]:
         button_style("pf_save_wallet", "purple")
-        if st.button("Save wallet", type="primary", key="pf_save_wallet", use_container_width=True):
+        if st.button("Save wallet", type="primary", key="pf_save_wallet", width="stretch"):
             save_current_user()
             grant_xp(user, 45, "Profile", "Saved wallet")
             add_notification(user, "Saved ✔️", "success")
@@ -154,15 +154,15 @@ with tabs[2]:
     # Presets are helpful for fast judge demos
     preset_row = st.columns(3)
     with preset_row[0]:
-        if st.button("Conservative", key="pf_preset_cons", use_container_width=True):
+        if st.button("Conservative", key="pf_preset_cons", width="stretch"):
             policy.update({"risk": 20, "max_per_tx_usdc": 0.05, "daily_cap_usdc": 0.25, "cooldown_s": 30})
             save_current_user(); st.rerun()
     with preset_row[1]:
-        if st.button("Balanced", key="pf_preset_bal", use_container_width=True):
+        if st.button("Balanced", key="pf_preset_bal", width="stretch"):
             policy.update({"risk": 50, "max_per_tx_usdc": 0.10, "daily_cap_usdc": 0.50, "cooldown_s": 15})
             save_current_user(); st.rerun()
     with preset_row[2]:
-        if st.button("Aggressive", key="pf_preset_aggr", use_container_width=True):
+        if st.button("Aggressive", key="pf_preset_aggr", width="stretch"):
             policy.update({"risk": 80, "max_per_tx_usdc": 0.25, "daily_cap_usdc": 1.00, "cooldown_s": 10})
             save_current_user(); st.rerun()
 
@@ -220,7 +220,7 @@ with tabs[2]:
         )
 
     button_style("pf_save_policy", "purple")
-    if st.button("Save limits", type="primary", key="pf_save_policy", use_container_width=True):
+    if st.button("Save limits", type="primary", key="pf_save_policy", width="stretch"):
         save_current_user()
         add_notification(user, "Limits saved.", "success")
         grant_xp(user, 20, "Profile", "Updated limits")
@@ -271,7 +271,7 @@ with tabs[3]:
 
             b1, b2 = st.columns([1, 1])
             with b1:
-                if st.button("Reset to defaults", key="pf_reset_defaults", use_container_width=True):
+                if st.button("Reset to defaults", key="pf_reset_defaults", width="stretch"):
                     wallet["rpc_url"] = DEFAULT_RPC_URL
                     wallet["explorer"] = DEFAULT_EXPLORER
                     wallet["usdc_erc20"] = DEFAULT_USDC_ERC20
@@ -280,7 +280,7 @@ with tabs[3]:
                     st.rerun()
             with b2:
                 button_style("pf_save_adv", "purple")
-                if st.button("Save advanced settings", type="primary", key="pf_save_adv", use_container_width=True):
+                if st.button("Save advanced settings", type="primary", key="pf_save_adv", width="stretch"):
                     if not _is_safe_public_https_url(rpc_in) or not _is_safe_public_https_url(exp_in):
                         st.error("Please provide safe public https URLs (no localhost).")
                     elif usdc_in and not is_address(usdc_in.strip()):

@@ -96,11 +96,11 @@ for idx, q in enumerate(quests):
         b1, b2 = st.columns([1, 1])
         with b1:
             if already:
-                st.button("Claimed", key=f"claimed_{q['id']}", disabled=True, use_container_width=True)
+                st.button("Claimed", key=f"claimed_{q['id']}", disabled=True, width="stretch")
             else:
                 can_claim = bool(done)
                 button_style(f"claim_{q['id']}", "purple" if can_claim else "white")
-                if st.button("Claim", key=f"claim_{q['id']}", disabled=not can_claim, use_container_width=True, type="primary" if can_claim else "secondary"):
+                if st.button("Claim", key=f"claim_{q['id']}", disabled=not can_claim, width="stretch", type="primary" if can_claim else "secondary"):
                     claimed.append(q["id"])
                     user["coins"] = int(user.get("coins", 0) or 0) + int(q["coins"])
                     grant_xp(user, int(q["xp"]), "Quest", q["title"])
@@ -113,7 +113,7 @@ for idx, q in enumerate(quests):
                     save_current_user()
                     st.rerun()
         with b2:
-            st.page_link(q["link"], label="Go →", use_container_width=True)
+            st.page_link(q["link"], label="Go →", width="stretch")
 
 soft_divider()
 callout(

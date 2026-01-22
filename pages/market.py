@@ -220,7 +220,7 @@ with tab_practice:
                 if not portfolio["trades"]:
                     st.caption("No trades yet.")
                 else:
-                    st.dataframe(portfolio["trades"][:25], use_container_width=True, hide_index=True)
+                    st.dataframe(portfolio["trades"][:25], width="stretch", hide_index=True)
 
 with tab_checkout:
     st.subheader("Testnet checkout (USDC on Arc testnet)")

@@ -177,7 +177,7 @@ with ac3:
     st.caption("Strategy")
     st.write(f"**{str(strat.get('name','Balanced'))}**")
 with ac4:
-    if st.button("Open Chat", key="agents_go_chat", use_container_width=True):
+    if st.button("Open Chat", key="agents_go_chat", width="stretch"):
         st.switch_page("pages/chat.py")
 
 st.markdown('</div>', unsafe_allow_html=True)
@@ -259,12 +259,12 @@ else:
 
             b1, b2, b3 = st.columns(3)
             with b1:
-                if st.button("Select", key=f"sel_{a.get('id')}", use_container_width=True, disabled=is_active):
+                if st.button("Select", key=f"sel_{a.get('id')}", width="stretch", disabled=is_active):
                     set_active_agent(user, str(a.get("id")))
                     save_current_user()
                     st.rerun()
             with b2:
-                if st.button("Copy", key=f"cpy_{a.get('id')}", use_container_width=True, disabled=is_active):
+                if st.button("Copy", key=f"cpy_{a.get('id')}", width="stretch", disabled=is_active):
                     st.session_state["copy_target_id"] = str(a.get("id"))
                     st.session_state["copy_source_id"] = str(active.get("id"))
                     st.session_state["copy_mode"] = "params"
@@ -273,7 +273,7 @@ else:
                 if st.button(
                     "Delete",
                     key=f"del_{a.get('id')}",
-                    use_container_width=True,
+                    width="stretch",
                     disabled=is_active and len(agents) == 1,
                 ):
                     st.session_state["confirm_delete_agent_id"] = str(a.get("id"))
@@ -293,14 +293,14 @@ if confirm_id:
         c1, c2 = st.columns(2)
         with c1:
             button_style("confirm_del_yes", "bad")
-            if st.button("Yes, delete", key="confirm_del_yes", use_container_width=True):
+            if st.button("Yes, delete", key="confirm_del_yes", width="stretch"):
                 delete_agent(user, confirm_id)
                 st.session_state["confirm_delete_agent_id"] = ""
                 save_current_user()
                 st.warning("Deleted")
                 st.rerun()
         with c2:
-            if st.button("Cancel", key="confirm_del_no", use_container_width=True):
+            if st.button("Cancel", key="confirm_del_no", width="stretch"):
                 st.session_state["confirm_delete_agent_id"] = ""
                 st.rerun()
 
@@ -321,7 +321,7 @@ if st.session_state.get("open_copy_modal"):
         mode = st.selectbox("Mode", options=["full", "params"], key="copy_mode")
     with c4:
         st.write("")
-        if st.button("Close", key="copy_close", use_container_width=True):
+        if st.button("Close", key="copy_close", width="stretch"):
             st.session_state["open_copy_modal"] = False
             st.rerun()
 

@@ -45,11 +45,11 @@ if st.session_state.get("onboard_complete"):
     c1, c2 = st.columns([1, 1])
     with c1:
         button_style("go_dash", "purple")
-        if st.button("Go to Dashboard", key="go_dash", use_container_width=True):
+        if st.button("Go to Dashboard", key="go_dash", width="stretch"):
             st.switch_page("pages/dashboard.py")
     with c2:
         button_style("restart_onb", "ghost")
-        if st.button("Restart onboarding", key="restart_onb", use_container_width=True):
+        if st.button("Restart onboarding", key="restart_onb", width="stretch"):
             st.session_state["onboard_complete"] = False
             st.session_state["onboard_step"] = 1
             st.experimental_rerun()
@@ -116,7 +116,7 @@ with left:
             st.write("You can proceed, or create another.")
         a_name = st.text_input("Agent name", value="Crowdlike Alpha")
         risk = st.slider("Risk level", 1, 100, 35)
-        if st.button("Create agent", key="onb_create_agent", type="primary", use_container_width=True):
+        if st.button("Create agent", key="onb_create_agent", type="primary", width="stretch"):
             create_agent(user, name=a_name.strip() or "Crowdlike Alpha", risk=risk)
             save_current_user()
             st.success("Agent created.")
@@ -144,7 +144,7 @@ with left:
         st.caption("We’ll open Coach. There you can run a cycle (plan → propose → approve/execute).")
         st.info("When you click Continue, you’ll be taken to Coach.")
         button_style("open_coach", "purple")
-        if st.button("Open Coach", key="open_coach", use_container_width=True):
+        if st.button("Open Coach", key="open_coach", width="stretch"):
             _complete()
 
     st.markdown("</div>", unsafe_allow_html=True)
@@ -173,16 +173,16 @@ soft_divider()
 b1, b2, b3 = st.columns([1, 1, 1], gap="large")
 with b1:
     button_style("onb_back", "ghost")
-    if st.button("Back", key="onb_back", use_container_width=True, disabled=(active <= 1)):
+    if st.button("Back", key="onb_back", width="stretch", disabled=(active <= 1)):
         st.session_state["onboard_step"] = max(1, active - 1)
         st.experimental_rerun()
 with b2:
     button_style("onb_skip", "ghost")
-    if st.button("Skip for now", key="onb_skip", use_container_width=True):
+    if st.button("Skip for now", key="onb_skip", width="stretch"):
         _complete()
 with b3:
     button_style("onb_next", "purple")
-    if st.button("Continue", key="onb_next", use_container_width=True):
+    if st.button("Continue", key="onb_next", width="stretch"):
         if active < len(steps):
             st.session_state["onboard_step"] = active + 1
             st.experimental_rerun()

@@ -63,13 +63,13 @@ callout(
 
 suggest = st.columns(3)
 with suggest[0]:
-    if st.button("Verified my first receipt ✅", key="sugg_1", use_container_width=True):
+    if st.button("Verified my first receipt ✅", key="sugg_1", width="stretch"):
         st.session_state["draft_post"] = "Just verified my first checkout ✅ Raised my daily cap to $0.50."
 with suggest[1]:
-    if st.button("Set limits 🛡️", key="sugg_2", use_container_width=True):
+    if st.button("Set limits 🛡️", key="sugg_2", width="stretch"):
         st.session_state["draft_post"] = "Set my safety limits: $0.10/tx with a 15s cooldown. Feeling safe."
 with suggest[2]:
-    if st.button("Agent plan 🤖", key="sugg_3", use_container_width=True):
+    if st.button("Agent plan 🤖", key="sugg_3", width="stretch"):
         st.session_state["draft_post"] = "My agent plan: small tips + strict limits + verify receipts before scaling."
 
 draft = st.session_state.get("draft_post", "")
@@ -114,7 +114,7 @@ for p in feed[:25]:
         cols = st.columns([1, 3])
         with cols[0]:
             button_style(f"like_{p.get('id')}", "blue")
-            if st.button("Like", key=f"like_{p.get('id')}", use_container_width=True):
+            if st.button("Like", key=f"like_{p.get('id')}", width="stretch"):
                 p["likes"] = int(p.get("likes", 0) or 0) + 1
                 crowd["likes_given"] = int(crowd.get("likes_given", 0) or 0) + 1
                 crowd["score"] = float(crowd.get("score", 50.0) or 50.0) + 0.3

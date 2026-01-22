@@ -126,7 +126,7 @@ def flow_banner(user: Dict[str, Any], *, active: str = "") -> None:
             tone="muted",
         )
         button_style("flow_continue", "purple")
-        if st.button(f"Continue → {ns.label}", key="flow_continue", use_container_width=True):
+        if st.button(f"Continue → {ns.label}", key="flow_continue", width="stretch"):
             st.switch_page(ns.page)
 
 
@@ -146,10 +146,10 @@ def sidebar_flow_card(user: Dict[str, Any], *, active_page: str = "") -> None:
 
     if ns:
         button_style("sb_continue", "purple")
-        if st.button(f"Continue → {ns.label}", key=f"sb_continue_{active_page}", use_container_width=True):
+        if st.button(f"Continue → {ns.label}", key=f"sb_continue_{active_page}", width="stretch"):
             st.switch_page(ns.page)
         st.caption("Or open the full wizard.")
-        if st.button("Open Journey wizard", key=f"sb_open_journey_{active_page}", use_container_width=True):
+        if st.button("Open Journey wizard", key=f"sb_open_journey_{active_page}", width="stretch"):
             st.switch_page("pages/journey.py")
     else:
         callout("You’re fully set up. Run cycles and explore leaderboards.", tone="success")

@@ -108,7 +108,7 @@ with tabs[0]:
     st.markdown("### All agents (compare)")
     table = agents_table(user, agents, price_map)
     if table:
-        st.dataframe(table, use_container_width=True, hide_index=True)
+        st.dataframe(table, width="stretch", hide_index=True)
     else:
         callout("No agent metrics yet. Run a cycle in Coach to start populating reports.", tone="muted")
 
@@ -139,7 +139,7 @@ with tabs[1]:
             continue
     if len(series) >= 3:
         series = series[-60:]
-        st.line_chart({ "value_usdc": [v for _, v in series] }, use_container_width=True)
+        st.line_chart({ "value_usdc": [v for _, v in series] }, width="stretch")
         st.caption("Value trend (recent snapshots).")
     else:
         callout("Value trend appears after a few daily snapshots. Run a cycle or simulate trades to generate history.", tone="muted")
@@ -171,7 +171,7 @@ with tabs[2]:
             })
             if len(show) >= 25:
                 break
-        st.dataframe(show, use_container_width=True, hide_index=True)
+        st.dataframe(show, width="stretch", hide_index=True)
 
     soft_divider()
     st.markdown("### Pending approvals")

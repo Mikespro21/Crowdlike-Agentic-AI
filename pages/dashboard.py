@@ -18,7 +18,7 @@ ensure_user_schema(user)
 # v{VERSION}: onboarding gate
 if not st.session_state.get("onboard_complete") and not user.get("onboarded"):
     callout("You are in a fresh cloud session. Complete onboarding once for the smoothest flow.", tone="warning")
-    st.page_link("pages/journey.py", label="Start onboarding →", use_container_width=True)
+    st.page_link("pages/journey.py", label="Start onboarding →", width="stretch")
     soft_divider()
 
 render_sidebar(user, active_page="dashboard")
@@ -46,11 +46,11 @@ soft_divider()
 
 a, b, c = st.columns([1.0, 1.0, 1.0], gap="large")
 with a:
-    st.page_link("pages/agents.py", label="🧠 Manage agents", use_container_width=True)
+    st.page_link("pages/agents.py", label="🧠 Manage agents", width="stretch")
 with b:
-    st.page_link("pages/coach.py", label="🤖 Run in Coach", use_container_width=True)
+    st.page_link("pages/coach.py", label="🤖 Run in Coach", width="stretch")
 with c:
-    st.page_link("pages/market.py", label="📈 Market / Checkout", use_container_width=True)
+    st.page_link("pages/market.py", label="📈 Market / Checkout", width="stretch")
 
 soft_divider()
 

@@ -55,8 +55,8 @@ callout(
 
 c1, c2 = st.columns([1.0, 1.0], gap="large")
 with c1:
-    st.page_link("pages/dashboard.py", label="🚀 Dashboard", use_container_width=True)
+    st.page_link("pages/dashboard.py", label="🚀 Dashboard", width="stretch")
 with c2:
-    st.page_link("pages/journey.py", label="🧭 Guided Journey", use_container_width=True)
+    st.page_link("pages/journey.py", label="🧭 Guided Journey", width="stretch")
 
 site_footer()
