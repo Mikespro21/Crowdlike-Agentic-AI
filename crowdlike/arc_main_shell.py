@@ -10,7 +10,6 @@ import streamlit.components.v1 as components
 from crowdlike.registry import all_pages, Page
 from crowdlike.version import VERSION
 
-
 def _group_pages(pages: List[Page]) -> List[Tuple[str, List[Page]]]:
     grouped: Dict[str, List[Page]] = defaultdict(list)
     for p in pages:
@@ -24,7 +23,6 @@ def _group_pages(pages: List[Page]) -> List[Tuple[str, List[Page]]]:
     for g in sorted([k for k in grouped.keys() if k not in {x[0] for x in out}]):
         out.append((g, sorted(grouped[g], key=lambda x: (x.order, x.label))))
     return out
-
 
 def render_arc_main_shell(
     user: Optional[Dict[str, Any]] = None,
@@ -90,7 +88,7 @@ def render_arc_main_shell(
         font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
       }}
       /* Make the Streamlit component iframe act like a fixed sidebar */
-      body {{ width: 280px; height: 100vh; }}
+      body {{ width: 280px; height: 920px; }}  
       .muted {{ color: rgba(100,116,139,0.95); }}
       .group-title {{ font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }}
       .nav-item.active {{
@@ -287,6 +285,6 @@ def render_arc_main_shell(
     </script>
   </body>
 </html>
-"""
-    # Height is overridden by the script (fixed 100vh).
-    components.html(html, height=0, scrolling=False)
+""";
+    # Height is overridden by the script (fixed 100vh) but some environments need a non-zero initial height.
+    components.html(html, height=920, scrolling=False)
