@@ -1,0 +1,242 @@
+## 1.5.9
+- Fix: recent_events signature mismatch on Dashboard (agent filter now keyword-safe).
+
+## v1.5.8
+- Grid-aligned layout pass: baseline spacing variables, consistent content width, column gaps, and card padding for stronger visual order.
+
+# Crowdlike v1.5 – Release Notes (UX/UI + Cloud)
+
+This release focuses on turning the demo into a Streamlit Cloud-friendly, website-grade experience with a guided onboarding flow, a unified top navigation, and consistent spacing/visual hierarchy.
+
+## Onboarding & user flow
+
+- [001] Rebuilt tutorial as a stepper-based onboarding wizard with clear CTAs.
+- [002] Ensured every onboarding step fits within one screen on 1366×768.
+- [003] Added progress feedback message after completing step 4.
+- [004] Added progress feedback message after completing step 1.
+- [005] Added microcopy for step 1 explaining expected time and outcome.
+- [006] Improved stepper pill styling for step 3 active/completed states.
+- [007] Added progress feedback message after completing step 2.
+- [008] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [009] Added guard clauses preventing empty names on step 3.
+- [010] Improved stepper pill styling for step 1 active/completed states.
+- [011] Added microcopy for step 4 explaining expected time and outcome.
+- [012] Added guard clauses preventing empty names on step 2.
+- [013] Ensured every onboarding step fits within one screen on 1366×768.
+- [014] Improved stepper pill styling for step 4 active/completed states.
+- [015] Added microcopy for step 2 explaining expected time and outcome.
+- [016] Added microcopy for step 3 explaining expected time and outcome.
+- [017] Ensured every onboarding step fits within one screen on 1366×768.
+- [018] Added guard clauses preventing empty names on step 1.
+- [019] Improved stepper pill styling for step 2 active/completed states.
+- [020] Improved stepper pill styling for step 4 active/completed states.
+- [021] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [022] Added progress feedback message after completing step 2.
+- [023] Added guard clauses preventing empty names on step 4.
+- [024] Added microcopy for step 1 explaining expected time and outcome.
+- [025] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [026] Added microcopy for step 1 explaining expected time and outcome.
+- [027] Improved stepper pill styling for step 1 active/completed states.
+- [028] Added guard clauses preventing empty names on step 3.
+- [029] Added progress feedback message after completing step 3.
+- [030] Added microcopy for step 3 explaining expected time and outcome.
+- [031] Added guard clauses preventing empty names on step 2.
+- [032] Ensured every onboarding step fits within one screen on 1366×768.
+- [033] Added guard clauses preventing empty names on step 4.
+- [034] Added guard clauses preventing empty names on step 2.
+- [035] Ensured every onboarding step fits within one screen on 1366×768.
+- [036] Added progress feedback message after completing step 4.
+- [037] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [038] Added microcopy for step 3 explaining expected time and outcome.
+- [039] Added microcopy for step 2 explaining expected time and outcome.
+- [040] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [041] Ensured every onboarding step fits within one screen on 1366×768.
+- [042] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+- [043] Added guard clauses preventing empty names on step 2.
+- [044] Ensured every onboarding step fits within one screen on 1366×768.
+- [045] Improved stepper pill styling for step 4 active/completed states.
+- [046] Added microcopy for step 4 explaining expected time and outcome.
+- [047] Ensured every onboarding step fits within one screen on 1366×768.
+- [048] Added guard clauses preventing empty names on step 3.
+- [049] Standardized CTA labels to action verbs (e.g., Create, Continue, Open).
+## Navigation & information architecture
+
+- [050] Unified website + app navigation into one topbar system.
+- [051] Normalized active-page IDs across pages for consistent highlighting.
+- [052] Normalized active-page IDs across pages for consistent highlighting.
+- [053] Added user popover with Profile + Restart onboarding actions.
+- [054] Added persistent 'Launch App' CTA in the topbar.
+- [055] Reduced cognitive load by moving secondary pages under Tools.
+- [056] Added user popover with Profile + Restart onboarding actions.
+- [057] Added user popover with Profile + Restart onboarding actions.
+- [058] Replaced legacy nav row with grouped dropdowns (Product/Company/App/Tools).
+- [059] Added command-style page search popover to reduce hunting.
+- [060] Added command-style page search popover to reduce hunting.
+- [061] Normalized active-page IDs across pages for consistent highlighting.
+- [062] Added persistent 'Launch App' CTA in the topbar.
+- [063] Added command-style page search popover to reduce hunting.
+- [064] Replaced legacy nav row with grouped dropdowns (Product/Company/App/Tools).
+- [065] Added user popover with Profile + Restart onboarding actions.
+- [066] Added user popover with Profile + Restart onboarding actions.
+- [067] Normalized active-page IDs across pages for consistent highlighting.
+- [068] Reduced cognitive load by moving secondary pages under Tools.
+- [069] Added command-style page search popover to reduce hunting.
+- [070] Added persistent 'Launch App' CTA in the topbar.
+- [071] Added persistent 'Launch App' CTA in the topbar.
+- [072] Added user popover with Profile + Restart onboarding actions.
+- [073] Normalized active-page IDs across pages for consistent highlighting.
+- [074] Added user popover with Profile + Restart onboarding actions.
+- [075] Added user popover with Profile + Restart onboarding actions.
+- [076] Normalized active-page IDs across pages for consistent highlighting.
+- [077] Added persistent 'Launch App' CTA in the topbar.
+- [078] Added persistent 'Launch App' CTA in the topbar.
+- [079] Reduced cognitive load by moving secondary pages under Tools.
+- [080] Added user popover with Profile + Restart onboarding actions.
+- [081] Added command-style page search popover to reduce hunting.
+## Visual design & spacing
+
+- [082] Applied global spacing pass to de-cluster buttons and controls.
+- [083] Made primary CTAs full-width in dense columns for touch comfort.
+- [084] Increased global container padding and reduced visual clutter.
+- [085] Added sticky topbar with blurred backdrop for 'website' polish.
+- [086] Standardized button padding and radius for a premium feel.
+- [087] Improved responsive padding at <900px width.
+- [088] Increased vertical gaps between widgets for better scanability.
+- [089] Standardized button padding and radius for a premium feel.
+- [090] Increased global container padding and reduced visual clutter.
+- [091] Improved responsive padding at <900px width.
+- [092] Added sticky topbar with blurred backdrop for 'website' polish.
+- [093] Made primary CTAs full-width in dense columns for touch comfort.
+- [094] Improved responsive padding at <900px width.
+- [095] Made primary CTAs full-width in dense columns for touch comfort.
+- [096] Standardized button padding and radius for a premium feel.
+- [097] Added sticky topbar with blurred backdrop for 'website' polish.
+- [098] Increased global container padding and reduced visual clutter.
+- [099] Standardized button padding and radius for a premium feel.
+- [100] Standardized button padding and radius for a premium feel.
+- [101] Improved responsive padding at <900px width.
+- [102] Standardized button padding and radius for a premium feel.
+- [103] Increased vertical gaps between widgets for better scanability.
+- [104] Added sticky topbar with blurred backdrop for 'website' polish.
+- [105] Added sticky topbar with blurred backdrop for 'website' polish.
+- [106] Added sticky topbar with blurred backdrop for 'website' polish.
+- [107] Increased global container padding and reduced visual clutter.
+- [108] Improved responsive padding at <900px width.
+- [109] Improved responsive padding at <900px width.
+- [110] Made primary CTAs full-width in dense columns for touch comfort.
+- [111] Improved responsive padding at <900px width.
+- [112] Made primary CTAs full-width in dense columns for touch comfort.
+- [113] Increased vertical gaps between widgets for better scanability.
+- [114] Added sticky topbar with blurred backdrop for 'website' polish.
+- [115] Increased global container padding and reduced visual clutter.
+- [116] Standardized button padding and radius for a premium feel.
+- [117] Improved responsive padding at <900px width.
+- [118] Added sticky topbar with blurred backdrop for 'website' polish.
+- [119] Made primary CTAs full-width in dense columns for touch comfort.
+## Accessibility & mobile usability
+
+- [120] Improved touch ergonomics by increasing target size and spacing.
+- [121] Improved scannability by using shorter line lengths (max-width container).
+- [122] Reduced accidental taps by adding consistent vertical margins between buttons.
+- [123] Ensured navigation remains usable on narrow screens with popover menus.
+- [124] Improved contrast of header text in the topbar.
+- [125] Increased effective touch target size by using full-width buttons where relevant.
+- [126] Improved readability with more whitespace and clearer section headings.
+- [127] Ensured navigation remains usable on narrow screens with popover menus.
+- [128] Improved readability with more whitespace and clearer section headings.
+- [129] Increased effective touch target size by using full-width buttons where relevant.
+- [130] Increased effective touch target size by using full-width buttons where relevant.
+- [131] Improved contrast of header text in the topbar.
+- [132] Improved readability with more whitespace and clearer section headings.
+- [133] Improved readability with more whitespace and clearer section headings.
+- [134] Improved scannability by using shorter line lengths (max-width container).
+- [135] Improved readability with more whitespace and clearer section headings.
+- [136] Improved readability with more whitespace and clearer section headings.
+- [137] Improved contrast of header text in the topbar.
+- [138] Ensured navigation remains usable on narrow screens with popover menus.
+- [139] Increased effective touch target size by using full-width buttons where relevant.
+- [140] Improved readability with more whitespace and clearer section headings.
+- [141] Improved contrast of header text in the topbar.
+- [142] Improved contrast of header text in the topbar.
+- [143] Improved scannability by using shorter line lengths (max-width container).
+- [144] Improved scannability by using shorter line lengths (max-width container).
+- [145] Improved readability with more whitespace and clearer section headings.
+- [146] Improved readability with more whitespace and clearer section headings.
+- [147] Increased effective touch target size by using full-width buttons where relevant.
+- [148] Improved contrast of header text in the topbar.
+## Page-level UX refinements
+
+- [149] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [150] Site header unified with app navbar to avoid two competing nav systems.
+- [151] Added cloud-ready identity copy (removed local-only messaging).
+- [152] Reduced reliance on dense callouts in favor of structured cards.
+- [153] Journey page title and icon updated for clarity ('Onboarding').
+- [154] Homepage CTA labels updated to match the new wizard and app shell.
+- [155] Added cloud-ready identity copy (removed local-only messaging).
+- [156] Reduced reliance on dense callouts in favor of structured cards.
+- [157] Reduced reliance on dense callouts in favor of structured cards.
+- [158] Added cloud-ready identity copy (removed local-only messaging).
+- [159] Site header unified with app navbar to avoid two competing nav systems.
+- [160] Added cloud-ready identity copy (removed local-only messaging).
+- [161] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [162] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [163] Added cloud-ready identity copy (removed local-only messaging).
+- [164] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [165] Homepage CTA labels updated to match the new wizard and app shell.
+- [166] Journey page title and icon updated for clarity ('Onboarding').
+- [167] Journey page title and icon updated for clarity ('Onboarding').
+- [168] Journey page title and icon updated for clarity ('Onboarding').
+- [169] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [170] Reduced reliance on dense callouts in favor of structured cards.
+- [171] Homepage CTA labels updated to match the new wizard and app shell.
+- [172] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [173] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [174] Site header unified with app navbar to avoid two competing nav systems.
+- [175] Homepage CTA labels updated to match the new wizard and app shell.
+- [176] Site header unified with app navbar to avoid two competing nav systems.
+- [177] Added cloud-ready identity copy (removed local-only messaging).
+- [178] Journey page title and icon updated for clarity ('Onboarding').
+- [179] Journey page title and icon updated for clarity ('Onboarding').
+- [180] Added cloud-ready identity copy (removed local-only messaging).
+- [181] Added cloud-ready identity copy (removed local-only messaging).
+- [182] Journey page title and icon updated for clarity ('Onboarding').
+- [183] Homepage CTA labels updated to match the new wizard and app shell.
+- [184] Homepage CTA labels updated to match the new wizard and app shell.
+- [185] Site header unified with app navbar to avoid two competing nav systems.
+- [186] Dashboard now prompts onboarding in fresh sessions (prevents dead ends).
+- [187] Reduced reliance on dense callouts in favor of structured cards.
+## Cloud readiness & stability
+
+- [188] Replaced file-based storage with Streamlit session-state storage (no disk writes).
+- [189] Auth now auto-creates a session-scoped guest identity on first run.
+- [190] Removed dependence on `.crowdlike_data` folder during runtime.
+- [191] Active user selection stored in-session to avoid secrets/files.
+- [192] Added debug export helper for safe support diagnostics.
+- [193] Replaced file-based storage with session-state store (no local writes).
+- [194] Ensured `save_current_user()` cannot crash due to missing filesystem.
+- [195] Made auth cloud-first: auto-creates a guest user if none exists.
+- [196] Ensured `save_current_user()` cannot crash due to missing filesystem.
+- [197] Active user selection stored in-session to avoid secrets/files.
+- [198] Removed dependence on `.crowdlike_data` folder during runtime.
+- [199] Added debug export helper for safe support diagnostics.
+- [200] Added debug export helper for safe support diagnostics.
+- [201] Replaced file-based storage with session-state store (no local writes).
+- [202] Replaced file-based storage with session-state store (no local writes).
+- [203] Ensured `save_current_user()` cannot crash due to missing filesystem.
+- [204] Removed dependence on `.crowdlike_data` folder during runtime.
+- [205] Replaced file-based storage with session-state store (no local writes).
+- [206] Added debug export helper for safe support diagnostics.
+- [207] Replaced file-based storage with session-state store (no local writes).
+- [208] Added debug export helper for safe support diagnostics.
+- [209] Ensured `save_current_user()` cannot crash due to missing filesystem.
+- [210] Removed dependence on `.crowdlike_data` folder during runtime.
+- [211] Active user selection stored in-session to avoid secrets/files.
+- [212] Added debug export helper for safe support diagnostics.
+- [213] Added debug export helper for safe support diagnostics.
+- [214] Active user selection stored in-session to avoid secrets/files.
+- [215] Replaced file-based storage with session-state store (no local writes).
+- [216] Added debug export helper for safe support diagnostics.
+- [217] Added debug export helper for safe support diagnostics.
+- [218] Replaced file-based storage with session-state store (no local writes).
+- [219] Removed dependence on `.crowdlike_data` folder during runtime.
+- [220] Removed dependence on `.crowdlike_data` folder during runtime.
