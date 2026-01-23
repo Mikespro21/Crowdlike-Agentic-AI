@@ -1,11 +1,257 @@
-"""Canonical Streamlit entrypoint.
+"""
+Crowdlike Option B: Keep the existing React UI, run it inside Streamlit (iframe),
+and optionally provide a Python backend (FastAPI) for data/services.
 
-Run:
-  streamlit run app.py
+Goals
+- Maximum UI fidelity (React stays intact)
+- Minimal setup friction: `streamlit run app.py` from repo root
+  - If `./dist` is missing, the wrapper will attempt to build it automatically.
 
-This imports and runs the Option-B wrapper defined in streamlit_app.py.
+Runtime
+- Streamlit: http://127.0.0.1:8501
+- React (served from dist): http://127.0.0.1:<frontend_port>
+- Backend (FastAPI): http://127.0.0.1:<backend_port> (optional)
 """
 
-from streamlit_app import main
+from __future__ import annotations
 
-main()
+import atexit
+import os
+import shutil
+import socket
+import subprocess
+import sys
+from pathlib import Path
+from typing import Optional, Tuple
+
+import streamlit as st
+
+
+ROOT = Path(__file__).resolve().parent
+DIST_DIR = ROOT / "dist"  # Vite build output (npm run build)
+DIST_INDEX = DIST_DIR / "index.html"
+
+DEFAULT_BACKEND_PORT = int(os.environ.get("CROWDLIKE_BACKEND_PORT", "8001"))
+DEFAULT_FRONTEND_PORT = int(os.environ.get("CROWDLIKE_FRONTEND_PORT", "8502"))
+START_BACKEND = os.environ.get("CROWDLIKE_START_BACKEND", "true").lower() in ("1", "true", "yes")
+
+
+def _port_is_free(port: int) -> bool:
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.settimeout(0.2)
+        return s.connect_ex(("127.0.0.1", port)) != 0
+
+
+def _pick_port(preferred: int) -> int:
+    if _port_is_free(preferred):
+        return preferred
+    # pick a random free port
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.bind(("127.0.0.1", 0))
+        return int(s.getsockname()[1])
+
+
+def _run(cmd: list[str], cwd: Optional[Path] = None) -> Tuple[int, str]:
+    """Run a command and return (return_code, combined_output)."""
+    try:
+        p = subprocess.run(
+            cmd,
+            cwd=str(cwd) if cwd else None,
+            env={**os.environ},
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+            check=False,
+        )
+        return int(p.returncode), p.stdout or ""
+    except Exception as e:
+        return 1, f"Failed to run {cmd!r}: {e}"
+
+
+def _ensure_react_build() -> Tuple[bool, str]:
+    """
+    Ensure ./dist exists. If missing, try to build it automatically.
+    Returns (ok, log_output).
+    """
+    if DIST_INDEX.exists():
+        return True, ""
+
+    # Avoid repeated attempts on Streamlit reruns unless the user explicitly retries.
+    if st.session_state.get("_crowdlike_build_attempted"):
+        return False, st.session_state.get("_crowdlike_build_log", "")
+
+    st.session_state["_crowdlike_build_attempted"] = True
+
+    # Preconditions
+    if not (ROOT / "package.json").exists():
+        log = "package.json not found in repo root; cannot build React app."
+        st.session_state["_crowdlike_build_log"] = log
+        return False, log
+
+    npm = shutil.which("npm")
+    if not npm:
+        log = (
+            "npm was not found on PATH. Install Node.js (which includes npm), then rerun:\n"
+            "  streamlit run app.py"
+        )
+        st.session_state["_crowdlike_build_log"] = log
+        return False, log
+
+    logs = []
+
+    # Install deps if node_modules is missing
+    if not (ROOT / "node_modules").exists():
+        install_cmd = ["npm", "ci"] if (ROOT / "package-lock.json").exists() else ["npm", "install"]
+        rc, out = _run(install_cmd, cwd=ROOT)
+        logs.append(f"$ {' '.join(install_cmd)}\n{out}")
+        if rc != 0:
+            log = "\n\n".join(logs)
+            st.session_state["_crowdlike_build_log"] = log
+            return False, log
+
+    # Build
+    build_cmd = ["npm", "run", "build"]
+    rc, out = _run(build_cmd, cwd=ROOT)
+    logs.append(f"$ {' '.join(build_cmd)}\n{out}")
+
+    log = "\n\n".join(logs)
+    st.session_state["_crowdlike_build_log"] = log
+
+    return DIST_INDEX.exists(), log
+
+
+def _start_process(cmd: list[str], cwd: Optional[Path] = None) -> subprocess.Popen:
+    return subprocess.Popen(
+        cmd,
+        cwd=str(cwd) if cwd else None,
+        env={**os.environ},
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+
+
+def _ensure_started():
+    """Start backend + frontend servers once per Streamlit session."""
+    if "crowdlike_started" in st.session_state:
+        return
+
+    # Ensure dist exists (auto-build if needed)
+    build_ok, build_log = _ensure_react_build()
+
+    # Backend (FastAPI via uvicorn)
+    backend_port = _pick_port(DEFAULT_BACKEND_PORT)
+    backend_url = f"http://127.0.0.1:{backend_port}"
+
+    backend_proc = None
+    if START_BACKEND:
+        backend_proc = _start_process(
+            [
+                sys.executable,
+                "-m",
+                "uvicorn",
+                "backend_api:app",
+                "--host",
+                "127.0.0.1",
+                "--port",
+                str(backend_port),
+                "--log-level",
+                "warning",
+            ],
+            cwd=ROOT,
+        )
+
+    # Frontend (static dist server)
+    frontend_proc = None
+    frontend_url = None
+
+    frontend_port = _pick_port(DEFAULT_FRONTEND_PORT)
+    if build_ok and DIST_DIR.exists():
+        frontend_url = f"http://127.0.0.1:{frontend_port}"
+        frontend_proc = _start_process(
+            [sys.executable, "-m", "http.server", str(frontend_port), "--bind", "127.0.0.1"],
+            cwd=DIST_DIR,
+        )
+
+    st.session_state["crowdlike_started"] = True
+    st.session_state["backend_url"] = backend_url
+    st.session_state["frontend_url"] = frontend_url
+    st.session_state["backend_proc"] = backend_proc
+    st.session_state["frontend_proc"] = frontend_proc
+    st.session_state["build_ok"] = build_ok
+    st.session_state["build_log"] = build_log
+
+    def _cleanup():
+        for key in ("frontend_proc", "backend_proc"):
+            p = st.session_state.get(key)
+            try:
+                if p and p.poll() is None:
+                    p.terminate()
+            except Exception:
+                pass
+
+    atexit.register(_cleanup)
+
+
+def main():
+    st.set_page_config(page_title="Crowdlike (Option B)", layout="wide")
+    st.title("Crowdlike — Streamlit Wrapper (Option B)")
+    st.caption("React UI preserved; Streamlit is the shell/orchestrator.")
+
+    _ensure_started()
+
+    backend_url = st.session_state.get("backend_url")
+    frontend_url = st.session_state.get("frontend_url")
+    build_ok = st.session_state.get("build_ok", False)
+    build_log = st.session_state.get("build_log", "")
+
+    with st.sidebar:
+        st.header("Runtime")
+        st.write("Backend (FastAPI):", backend_url if START_BACKEND else "disabled")
+        st.write("Frontend (React):", frontend_url or "not available")
+        st.divider()
+
+        st.subheader("Run from repo root")
+        st.code(
+            "\n".join(
+                [
+                    "pip install -r requirements.txt",
+                    "streamlit run app.py",
+                ]
+            ),
+            language="bash",
+        )
+
+        st.caption("If `./dist` is missing, this wrapper will try to run `npm install` + `npm run build` automatically.")
+
+        if not build_ok:
+            if st.button("Retry React build"):
+                st.session_state.pop("_crowdlike_build_attempted", None)
+                st.session_state.pop("_crowdlike_build_log", None)
+                st.rerun()
+
+    if not frontend_url:
+        st.error("React UI is not available yet (dist build missing or build failed).")
+
+        st.markdown(
+            """
+**What you can do**
+- Make sure **Node.js + npm** are installed and available in your PATH.
+- Then rerun: `streamlit run app.py`
+- Or click **Retry React build** in the sidebar.
+"""
+        )
+        if build_log:
+            with st.expander("Build log"):
+                st.code(build_log)
+        return
+
+    # Embed the React app
+    st.components.v1.iframe(frontend_url, height=900, scrolling=True)
+
+    if START_BACKEND:
+        st.markdown(f"Backend health: `{backend_url}/health`")
+
+
+if __name__ == "__main__":
+    main()

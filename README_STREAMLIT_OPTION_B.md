@@ -8,13 +8,16 @@ This is the **Option B** integration: keep the existing **React (Vite) UI** inta
 ## What you get
 
 - **1:1 UI** (you keep the React app)
-- A **Streamlit wrapper** (`streamlit_app.py`) that:
+- A **Streamlit wrapper** (`app.py`) that:
   - starts a static server for `dist/`
   - starts an optional FastAPI backend
   - embeds the UI via iframe
 - A **FastAPI backend** (`backend_api.py`) that can proxy CoinGecko endpoints (optional, but useful)
 
 ## Setup
+
+
+> Note: If `./dist` is missing, `app.py` will attempt to run `npm install` and `npm run build` automatically.
 
 ### 1) Install JS deps and build the React UI
 From this repo root:
