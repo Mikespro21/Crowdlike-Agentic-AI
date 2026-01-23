@@ -31,6 +31,29 @@ ROOT = Path(__file__).resolve().parent
 DIST_DIR = ROOT / "dist"  # Vite build output (npm run build)
 DIST_INDEX = DIST_DIR / "index.html"
 
+# Optional: point Streamlit to a remotely hosted frontend (no local dist required).
+# Useful for Streamlit Community Cloud and other environments without Node/npm.
+#
+# Set either:
+# - Environment variable: CROWDLIKE_REMOTE_FRONTEND_URL
+# - Streamlit secrets:     CROWDLIKE_REMOTE_FRONTEND_URL
+#
+# Example (Streamlit secrets):
+#   CROWDLIKE_REMOTE_FRONTEND_URL = "https://your-frontend-host.example"
+
+
+def _get_secret(key: str) -> Optional[str]:
+    """Safely read Streamlit secrets without requiring them to be configured."""
+    try:
+        val = st.secrets.get(key)  # type: ignore[attr-defined]
+        return str(val) if val else None
+    except Exception:
+        return None
+
+
+def _remote_frontend_url() -> Optional[str]:
+    return os.environ.get("CROWDLIKE_REMOTE_FRONTEND_URL") or _get_secret("CROWDLIKE_REMOTE_FRONTEND_URL")
+
 DEFAULT_BACKEND_PORT = int(os.environ.get("CROWDLIKE_BACKEND_PORT", "8001"))
 DEFAULT_FRONTEND_PORT = int(os.environ.get("CROWDLIKE_FRONTEND_PORT", "8502"))
 START_BACKEND = os.environ.get("CROWDLIKE_START_BACKEND", "true").lower() in ("1", "true", "yes")
@@ -91,8 +114,10 @@ def _ensure_react_build() -> Tuple[bool, str]:
     npm = shutil.which("npm")
     if not npm:
         log = (
-            "npm was not found on PATH. Install Node.js (which includes npm), then rerun:\n"
-            "  streamlit run app.py"
+            "npm was not found on PATH, so this environment cannot build the React frontend.\n\n"
+            "To run this on Streamlit Community Cloud (or any server without Node), do ONE of the following:\n"
+            "  1) Build the frontend locally (npm install && npm run build) and commit ./dist to the repo; OR\n"
+            "  2) Host the frontend elsewhere and set CROWDLIKE_REMOTE_FRONTEND_URL (env var or Streamlit secrets)."
         )
         st.session_state["_crowdlike_build_log"] = log
         return False, log
@@ -136,8 +161,11 @@ def _ensure_started():
     if "crowdlike_started" in st.session_state:
         return
 
-    # Ensure dist exists (auto-build if needed)
-    build_ok, build_log = _ensure_react_build()
+    remote_ui = _remote_frontend_url()
+
+    # If a remote UI is configured, we don't need a local build/server.
+    # Otherwise, ensure dist exists (auto-build if possible).
+    build_ok, build_log = (True, "") if remote_ui else _ensure_react_build()
 
     # Backend (FastAPI via uvicorn)
     backend_port = _pick_port(DEFAULT_BACKEND_PORT)
@@ -163,15 +191,16 @@ def _ensure_started():
 
     # Frontend (static dist server)
     frontend_proc = None
-    frontend_url = None
+    frontend_url = remote_ui
 
-    frontend_port = _pick_port(DEFAULT_FRONTEND_PORT)
-    if build_ok and DIST_DIR.exists():
-        frontend_url = f"http://127.0.0.1:{frontend_port}"
-        frontend_proc = _start_process(
-            [sys.executable, "-m", "http.server", str(frontend_port), "--bind", "127.0.0.1"],
-            cwd=DIST_DIR,
-        )
+    if not remote_ui:
+        frontend_port = _pick_port(DEFAULT_FRONTEND_PORT)
+        if build_ok and DIST_DIR.exists():
+            frontend_url = f"http://127.0.0.1:{frontend_port}"
+            frontend_proc = _start_process(
+                [sys.executable, "-m", "http.server", str(frontend_port), "--bind", "127.0.0.1"],
+                cwd=DIST_DIR,
+            )
 
     st.session_state["crowdlike_started"] = True
     st.session_state["backend_url"] = backend_url
@@ -222,7 +251,18 @@ def main():
             language="bash",
         )
 
-        st.caption("If `./dist` is missing, this wrapper will try to run `npm install` + `npm run build` automatically.")
+        st.caption(
+            "If `./dist` is missing and npm is available, this wrapper will try to run `npm install` + `npm run build`."
+        )
+
+        st.subheader("Deploy to Streamlit")
+        st.markdown(
+            """
+For Streamlit Community Cloud (public access):
+- **Best**: build locally and commit `./dist` (so the server doesn't need Node/npm)
+- **Alternative**: host the frontend elsewhere and set `CROWDLIKE_REMOTE_FRONTEND_URL`
+"""
+        )
 
         if not build_ok:
             if st.button("Retry React build"):
@@ -236,9 +276,9 @@ def main():
         st.markdown(
             """
 **What you can do**
-- Make sure **Node.js + npm** are installed and available in your PATH.
-- Then rerun: `streamlit run app.py`
-- Or click **Retry React build** in the sidebar.
+- If you're running locally: install **Node.js + npm**, then rerun `streamlit run app.py`.
+- If you're deploying on Streamlit: build locally and commit `./dist`, **or** set `CROWDLIKE_REMOTE_FRONTEND_URL`.
+- You can also click **Retry React build** in the sidebar.
 """
         )
         if build_log:

@@ -17,7 +17,8 @@ This is the **Option B** integration: keep the existing **React (Vite) UI** inta
 ## Setup
 
 
-> Note: If `./dist` is missing, `app.py` will attempt to run `npm install` and `npm run build` automatically.
+> Note: If `./dist` is missing **and npm is available**, `app.py` will attempt to run `npm install` and `npm run build` automatically.
+> If npm is **not** available (common on Streamlit Community Cloud), you must either **commit a prebuilt `./dist`** or set `CROWDLIKE_REMOTE_FRONTEND_URL`.
 
 ### 1) Install JS deps and build the React UI
 From this repo root:
@@ -52,6 +53,24 @@ Environment variables (optional):
 - `CROWDLIKE_FRONTEND_PORT=8502`
 - `CROWDLIKE_COINGECKO_BASE=https://api.coingecko.com/api/v3`
 - `CROWDLIKE_CACHE_TTL=30` (seconds)
+- `CROWDLIKE_REMOTE_FRONTEND_URL=https://...` (optional)
+
+## Deploy on Streamlit Community Cloud (public access)
+
+Streamlit Cloud typically runs your Python app but may not provide Node/npm.
+To make this app publicly accessible on Streamlit:
+
+1. **Build the React UI locally**:
+   ```bash
+   npm install
+   npm run build
+   ```
+   This creates `./dist`.
+2. **Commit `./dist` to your repo** (make sure it is not ignored by `.gitignore`).
+3. Deploy on Streamlit Community Cloud and set the main file to `app.py`.
+
+Alternative (no `dist` in repo): host the React UI elsewhere (Vercel/Netlify/GitHub Pages) and set
+`CROWDLIKE_REMOTE_FRONTEND_URL` in Streamlit secrets.
 
 ## Notes on “conversion”
 

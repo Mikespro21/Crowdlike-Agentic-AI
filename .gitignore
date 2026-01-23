@@ -8,7 +8,11 @@ __pycache__/
 
 # Node
 node_modules/
-dist/
+# NOTE: Do NOT ignore dist/ if you plan to deploy this on Streamlit Community Cloud.
+# Streamlit Cloud often does not have Node/npm available at runtime, so committing a prebuilt
+# ./dist is the simplest way to make the app publicly accessible.
+# If you prefer not to commit dist/, re-add it here and set CROWDLIKE_REMOTE_FRONTEND_URL instead.
+
 
 # Secrets
 .env
